@@ -3,13 +3,13 @@ $templateFolder = realpath(__DIR__."/../templates");
 
 return [
 
-    "/doc" => [
+    "/documentation" => [
         "get" => [
             "controller" => "Phidias\Documentation\Controller->main()",
             "template" => [
-                "text/html" => "$templateFolder/html/index.php"
+               "text/html" => "$templateFolder/html/index.php"
             ]
         ]
-    ]
+    ]  
 
 ];
