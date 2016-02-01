@@ -1,0 +1,123 @@
+{
+    "title": "API Documentation",
+    "description": "You're reading it right now",
+
+    "resources": [
+
+        {
+            "url": "/documentation",
+            "title": "this document",
+
+            "exchanges": [
+                {
+                    "request": {
+                        "method": "get",
+                        "headers": {
+                            "Accept": "aplication/json"
+                        }
+                    },
+
+                    "response": {
+                        "headers": {
+                            "Content-Type": "aplication/json"
+                        },
+                        "body": "full specification in JSON"
+                    }
+                },
+
+                {
+                    "request": {
+                        "method": "get",
+                        "headers": {
+                            "Accept": "text/html"
+                        }
+                    },
+
+                    "response": {
+                        "headers": {
+                            "Content-Type": "text/html"
+                        },
+
+                        "body": "This HTML"
+                    }
+                }
+            ]
+        },
+
+
+        {
+            "url": "/test",
+            "title": "A test",
+
+            "exchanges": [
+                {
+                    "request": {
+                        "method": "get",
+                        "headers": {
+                            "Accept": "aplication/json"
+                        }
+                    },
+
+                    "response": {
+                        "headers": {
+                            "Content-Type": "aplication/json"
+                        },
+                        "body": "full specification in JSON"
+                    }
+                },
+
+                {
+                    "request": {
+                        "method": "get",
+                        "headers": {
+                            "Accept": "text/html"
+                        }
+                    },
+
+                    "response": {
+                        "headers": {
+                            "Content-Type": "text/html"
+                        },
+
+                        "body": "This HTML"
+                    }
+                },
+
+                {
+                    "request": {
+                        "method": "post",
+                        "headers": {
+                            "Content-Type": "aplication/json"
+                        },
+                        "body": "A JSon object"
+                    },
+
+                    "response": {
+                        "headers": {
+                            "Content-Type": "aplication/json"
+                        },
+                        "body": "The created JSON object"
+                    }
+                },
+
+                {
+                    "request": {
+                        "method": "post",
+                        "headers": {
+                            "Content-Type": "text/xml"
+                        },
+                        "body": "An XML object"
+                    },
+
+                    "response": {
+                        "headers": {
+                            "Content-Type": "text/html"
+                        },
+                        "body": "An XML response"
+                    }
+                }
+            ]
+        }
+
+    ]
+}

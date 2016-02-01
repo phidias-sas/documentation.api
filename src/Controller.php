@@ -7,20 +7,20 @@ use Phidias\Api\Server\Module;
 
 class Controller
 {
-    /* documentation index file (relative to module's root) */
-    private static $documentationIndex = "/documentation/index.json";
+    /* specification index file (relative to module's root) */
+    private static $specificationIndex = "/specification/index.json";
 
     public function main()
     {
         /* Find all loaded modules */
-        $documentedModules = [];
+        $modules = [];
 
         foreach ( Module::getLoadedModules() as $module ) {
-            if (is_file($module."/".self::$documentationIndex)) {
-                $documentedModules[] = Document::parse($module."/".self::$documentationIndex);
+            if (is_file($module."/".self::$specificationIndex)) {
+                $modules[] = Document::parse($module."/".self::$specificationIndex);
             }
         }
 
-        return $documentedModules;
+        return $modules;
     }
 }
