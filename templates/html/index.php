@@ -2,16 +2,12 @@
 <html ng-app="phidias-specification">
     <head>
         <meta charset="utf-8">
-
         <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-        <title ng-bind="phidias.title"></title>
+
+        <title>Documentación</title>
 
         <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
-
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js" type="text/javascript"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js" type="text/javascript"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js" type="text/javascript"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-sanitize.min.js" type="text/javascript"></script>
 
         <style type="text/css">
         html {
@@ -32,11 +28,23 @@
             font-weight: normal;
         }
 
+        pre {
+            margin: 0;
+            padding: 0;
+        }
+
+
         main {
             display: block;
             margin: 32px 0 0 32px;
             padding: 0;
             max-width: 1024px;
+        }
+
+
+        [phidias-json-schema] {
+            display: inline-block;
+            vertical-align: top;
         }
 
         #search {
@@ -60,36 +68,57 @@
 
         summary {
             display: block;
-            padding: 8px 16px;
             cursor: pointer;
-
             outline: none;
         }
 
-        summary:hover {
+        details.drawer > summary {
+            padding: 8px 16px;
+        }
+
+        details.drawer > summary:hover {
             background-color: rgba(0, 0, 0, 0.1);
         }
 
-        summary::-webkit-details-marker {
+        details.drawer > summary::-webkit-details-marker {
             display: none;
         }
 
-        .resource {
+        details.drawer[open] {
+            margin-bottom: 32px;
+        }
+
+        details.drawer[open] > summary {
+            background-color: rgba(0, 0, 0, 0.08);
+        }
+
+
+        .module {
             display: block;
-            margin: 0;
+            margin: 0 0 1em 0;
             padding: 0;
         }
 
-        .resource[open] {
-            margin-bottom: 48px;
+        .module > .resources {
+            margin-left: 16px;
         }
 
-        .resource[open] > summary {
-            background-color: rgba(0,0,0, 0.08);
+        .module > summary h2,
+        .module > summary p {
+            margin: 0;
+            padding: 0;
+            font-weight: normal;;
         }
 
-        .resource summary h2,
-        .resource summary p {
+
+        .resource {
+            display: block;
+            margin: 0.5em 0;
+            padding: 0;
+        }
+
+        .resource > details > summary h2,
+        .resource > details > summary p {
             margin: 0;
             padding: 0;
 
@@ -101,24 +130,21 @@
         }
 
 
-        .resource table.attributes {
+        .resource table {
             width: 100%;
-
-            background-color: rgba(0,0,0, 0.08);
-            padding: 8px; /* match with <summary> padding */
             margin: 0;
         }
 
-        .resource table.attributes td {
+        .resource table td {
             vertical-align: top;
         }
 
-        .resource table.attributes td:first-child {
+        .resource table td:first-child {
             font-weight: bold;
             width: 120px;
         }
 
-        .resource table.attributes p {
+        .resource table p {
             margin: 0;
             color: #333;
         }
@@ -128,15 +154,23 @@
             background-color: rgba(0,0,0, 0.08);
         }
 
-        .exchange summary {
+
+
+        .exchange > summary {
             padding: 12px;
         }
 
-        .exchange[open] summary {
+        .exchange > summary:hover,
+        .exchange[open] > summary {
             background-color: rgba(0,0,0, 0.08);
         }
 
-        .exchange summary strong {
+        .exchange > summary::-webkit-details-marker {
+            display: none;
+        }
+
+
+        .exchange > summary strong {
 
             display: inline-block;
             text-align: center;
@@ -149,27 +183,35 @@
             font-weight: normal;
         }
 
-        .exchange.get summary strong {
+        .exchange.get > summary strong {
             background-color: #4dbcd4;
         }
 
-        .exchange.post summary strong {
+        .exchange.post > summary strong {
             background-color: #b6c72b;
         }
 
-        .exchange.put summary strong {
+        .exchange.put > summary strong {
             background-color: #b6c72b;
         }
 
-        .exchange.delete summary strong {
+        .exchange.delete > summary strong {
             background-color: #f34541;
         }
 
         .exchange .request,
         .exchange .response {
             padding: 18px 32px;
+        }
+
+
+        .exchange .request .url,
+        .exchange .request .header,
+        .exchange .request .body,
+        .exchange .response {
             font-family: Courier, sans-serif;
         }
+
 
         .exchange p {
             margin: 0;
@@ -194,8 +236,51 @@
             color: #ddd;
         }
 
+        .request > .url > summary {
+            padding: 0.5em 0;
+        }
+
+        .request > .url > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .request .url .method {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .request .url .querystring:before {
+            content: '?';
+        }
+
+        .request .url .querystring {
+            display: inline;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            color: #777;
+        }
+
+        .request .url .querystring li {
+            display: inline;
+        }
+
+        .request .url .querystring li:after {
+            content: '&';
+        }
+
+
+        .request .attributes,
+        .request .parameters {
+            padding: 16px;
+        }
+
+
         .resource .resources {
-            margin: 8px 0 0 8px;
+            /*margin: 0 0 0 4px;*/
+            margin: 0;
+            padding: 0;
         }
 
         </style>
@@ -203,489 +288,173 @@
 
         <script type="text/javascript">
 
+        angular.module("phidias-specification",[]);
+        angular.module("phidias-specification").controller("mainController", mainController);
+        angular.module("phidias-specification").filter('findResource', findResource);
+        angular.module("phidias-specification").directive('phidiasJsonSchema', phidiasJsonSchema);
 
 
-        function Schema() {
+        function phidiasJsonSchema()
+        {
+            return {
 
-            this.expand = function(object) {
+                restrict: 'A',
 
-                if (object === null) {
-                    return object;
+                scope: {
+                    schema: '=phidiasJsonSchema'
+                },
+
+                controllerAs: 'vm',
+                bindToController: true,
+
+                template: '<pre ng-bind="vm.explanation"></pre>',
+
+                controller: function() {
+                    var vm          = this;
+                    var explanation = getExplanation(vm.schema);
+                    vm.explanation  = typeof explanation === 'object' ? angular.toJson(explanation, 2) : explanation;
                 }
 
-                if (typeof object != 'object') {
-                    return [object];
-                }
+            };
+        }
 
-                if (object.constructor === Array) {
-                    var retval = [];
-                    for (var i = 0; i < object.length; i++) {
-                        retval = retval.concat(this.expand(object[i]));
+        function getExplanation(schema)
+        {
+            if (typeof schema !== 'object') {
+                return schema;
+            }
+
+            if (schema.constructor === Array) {
+                var retval = [];
+                for (var i = 0; i < schema.length; i++) {
+                    retval.push( getExplanation(schema[i]) );
+                }
+                return retval;
+            }
+
+            switch (schema.$type) {
+
+                case 'array':
+                    return schema.$items === undefined ? [] : [getExplanation(schema.$items)];
+                break;
+
+                case 'object':
+                case undefined:
+
+                    var retval = {};
+                    for (var property in schema) {
+                        retval[property] = getExplanation(schema[property]);
                     }
                     return retval;
-                }
 
-                // Expand if $any tag is present
-                var variations = [];
+                break;
 
-                if (object.hasOwnProperty('$any')) {
-
-                    for (var k in object['$any']) {
-
-                        var currentOption = object['$any'][k];
-
-                        if (typeof currentOption != 'object') {
-                            variations.push(currentOption);
-                            continue;
-                        }
-
-
-                        /*
-                        Syntactic sugar:
-                        Track properties along side "$any" and use them in all variations:
-
-                        turn this
-
-                        {
-                            someProperty: someValue,
-                            $any: [
-                                {
-                                    someOtherProperty: someValue
-                                },
-
-                                {
-                                    someOtherProperty: someOtherValue
-                                }
-                            ]
-                        }
-
-                        into this
-
-                        {
-                            $any: [
-                                {
-                                    someProperty: someValue,
-                                    someOtherProperty: someValue
-                                },
-
-                                {
-                                    someProperty: someValue,
-                                    someOtherProperty: someOtherValue
-                                }
-                            ]
-                        }
-                        */
-                        var mergedObject = {};
-
-                        for (var property in object) {
-                            if (property == '$any') {
-                                continue;
-                            }
-                            if (Object.prototype.hasOwnProperty.call(object, property)) {
-                                mergedObject[property] = object[property];
-                            }
-                        }
-
-
-                        for (var property in currentOption) {
-                            if (Object.prototype.hasOwnProperty.call(currentOption, property)) {
-                                mergedObject[property] = currentOption[property];
-                            }
-                        }
-
-                        variations = variations.concat(this.expand(mergedObject));
-                    }
-
-                    return variations;
-                }
-
-
-
-                // Expand object:
-                var expanded = {};
-                for (var property in object) {
-                    if (Object.prototype.hasOwnProperty.call(object, property)) {
-                        expanded[property] = this.expand(object[property]);
-                    }
-                }
-
-
-                return this.combine(expanded);
-
-            };
-
-
-            this.combine = function(expansionObject) {
-
-                var retval = [];
-
-                for (var property in expansionObject) {
-                    retval = this.addProperty(retval, property, expansionObject[property]);
-                }
-
-                return retval;
-            };
-
-
-
-
-            /**
-
-            This function takes an array of objects and returns
-            a new array containing all possible combinations of the
-            given property values:
-
-            ex.
-            arr = [
-                {
-                    "name": "SomeName"
-                },
-
-                {
-                    "name": "Bar"
-                }
-            ]
-
-            var result = addProperty(arr, "type", ["a", "b"]);
-
-            result is:
-
-            [
-                {
-                    "name": "SomeName",
-                    "type": "a"
-                },
-
-                {
-                    "name": "SomeName",
-                    "type": "b"
-                },
-
-                {
-                    "name": "Bar",
-                    "type": "a"
-                },
-
-                {
-                    "name": "Bar",
-                    "type": "b"
-                }
-            ]
-
-            */
-
-            this.addProperty = function(arr, property, values) {
-
-                var incoming = [];
-
-                for (var key in values) {
-                    var object       = {};
-                    object[property] = values[key];
-                    incoming.push(object);
-                }
-
-                return this.fuse(arr, incoming);
-            };
-
-
-            this.fuse = function(arrayA, arrayB) {
-
-                if (arrayA.length == 0) {
-                    return arrayB;
-                }
-
-                var retval = [];
-
-                for (var i in arrayA) {
-                    var elementA = arrayA[i];
-                    for (var k in arrayB) {
-                        var elementB = arrayB[k];
-
-                        retval.push( this.mergeObjects(elementA, elementB) );
-                    }
-                }
-
-                return retval;
-
-            };
-
-
-            this.mergeObjects = function(elementA, elementB) {
-
-                // this function returns a new object
-                var retval = {};
-
-                // with copies off al properties from elementA
-                for (var property in elementA) {
-                    if (Object.prototype.hasOwnProperty.call(elementA, property)) {
-                        retval[property] = elementA[property];
-                    }
-                }
-
-                // overwritten with copies of all properties from elementB
-                for (var property in elementB) {
-                    if (Object.prototype.hasOwnProperty.call(elementB, property)) {
-                        retval[property] = elementB[property];
-                    }
-                }
-
-                return retval;
-            };
-
-
-            this.getExample = function(schema) {
-
-                if (typeof schema !== "object") {
-                    return schema;
-                }
-
-                if (schema.constructor === Array) {
-                    return schema.map(this.getExample);
-                }
-
-                if (schema.$type !== undefined) {
-                    return this.getTypeExample(schema.$type, schema);
-                }
-
-                var retval = {};
-                for (property in schema) {
-                    retval[property] = this.getExample(schema[property]);
-                }
-                return retval;
-
-            };
-
-            this.getTypeExample = function(type, schema) {
-
-                switch (type) {
-
-                    case "boolean":
-                        return Math.random() < 0.5;
-                    break;
-
-                    case "integer":
-                        return Math.floor((Math.random() * 999999) + 1);
-                    break;
-
-                    case "string":
-                        return "A random string";
-                    break;
-
-                    case "array":
-                        
-                        if (schema.$items === undefined) {
-                            return ["An array"];
-                        }
-
-                        var retval = [];
-                        var nItems = Math.floor((Math.random() * 5) + 1);
-
-                        for (var cont = 1; cont <= nItems; cont++) {
-                            retval.push(this.getExample(schema.$items));
-                        }
-
-                        return retval;
-
-                    break;
-
-                    default:
-                        return "An element of type " + type;
-                    break;
-
-                }
-
-            };
-
-        };
-
-
-
-        function Collection(items) {
-
-            if (typeof items === "object" && items.constructor !== Array) {
-                var schema = new Schema();
-                items      = schema.expand(items);
-            }
-
-            this.items = items || [];
-
-            this.push = function(item) {
-                this.items.push(item);
-                return this;
-            };
-
-            this.getObjectProperty = function(object, property) {
-
-                var currentObject = object;
-
-                var path = property.split(".");
-                for (var i = 0; i < path.length; i++) {
-                    var currentProperty = path[i];
-
-                    if (!currentObject.hasOwnProperty(currentProperty)) {
-                        return undefined;
-                    }
-
-                    currentObject = currentObject[currentProperty];
-                }
-
-
-                return currentObject;
-            };
-
-
-
-            this.distinct = function(property) {
-
-                var retval = new Collection();
-
-                for (var k in this.items) {
-
-                    var item         = this.items[k];
-                    var currentValue = this.getObjectProperty(item, property);
-
-                    if (currentValue !== undefined && retval.items.indexOf(currentValue) < 0) {
-                        retval.push(currentValue);
-                    }
-
-                };
-
-                return retval;
-
-            };
-
-
-            this.groupBy = function(property) {
-
-                var groups = {};
-
-                for (var k in this.items) {
-
-                    var item  = this.items[k];
-                    var value = this.getObjectProperty(item, property);
-
-                    if (!value) {
-                        continue;
-                    }
-
-                    if (!groups.hasOwnProperty(value)) {
-                        groups[value] = new Collection();
-                    }
-
-                    groups[value].push(item);
-
-                };
-
-                return groups;
-
-            };
-
-
-
-            /*
-            collection.match({
-                first: "santiago",
-                people: {
-                    name: "santiago"
-                }
-            });
-            */
-
-            this.match = function(object) {
-
-                var matches = new Collection();
-
-                for (var k in this.items) {
-
-                    var item = this.items[k];
-
-                    if (this.matchesSchema(item, object)) {
-                        matches.push(item);
-                    }
-
-                };
-
-                return matches;
-            }
-
-
-            this.matchesSchema = function(subject, schema) {
-
-                if (typeof schema !== 'object') {
-                    return subject === schema;
-                }
-
-                if (typeof subject !== 'object') {
-                    return false;
-                }
-
-                for (var property in schema) {
-
-                    if (!subject.hasOwnProperty(property)) {
-                        return this.matchesSchema(null, schema[property]);
-                    }
-
-                    if (!this.matchesSchema(subject[property], schema[property])) {
-                        return false;
-                    }
-
-                }
-
-                return true;
-
-            }
-
-            this.condense = function() {
-
-                var retval = {};
-
-                for (var k = 0; k < this.items.length; k++) {
-                    retval = this.condenseObjects(retval, this.items[k]);
-                }
-
-                return retval;
-
-            }
-
-            this.condenseObjects = function(targetObject, sourceObject) {
-
-
-                for (var property in sourceObject) {
-
-                    var value = sourceObject[property];
-
-                    if (typeof value === 'object') {
-
-                        if ( ! Object.prototype.hasOwnProperty.call(targetObject, property)) {
-                            targetObject[property] = {};
-                        }
-
-                        targetObject[property] = this.condenseObjects(targetObject[property], value);
-
-                    } else {
-
-                        if ( ! Object.prototype.hasOwnProperty.call(targetObject, property)) {
-                            targetObject[property] = [];
-                        }
-
-                        targetObject[property].push(value);
-                    }
-
-                }
-
-
-                return targetObject;
-
+                default:
+                    return schema.$title ? schema.$title : schema.$type;
+                break;
             }
 
         }
 
 
-        angular.module("phidias-specification",[]);
-        angular.module("phidias-specification").controller("mainController", mainController);
+        function findResource()
+        {
+            return function(items, query) {
+
+                var filtered = [];
+
+                for (var i = 0; i < items.length; i++) {
+                    if (resourceMatches(items[i], query)) {
+                        filtered.push(items[i]);
+                    }
+                }
+
+                return filtered;
+
+            }
+        }
+
+        function resourceMatches(resource, query)
+        {
+            if (resource.exchanges === undefined || !resource.exchanges.length) {
+                return false;
+            }
+
+            if (textMatches(resource.title, query) || textMatches(resource.description, query)) {
+                return true;
+            }
+
+            if (urlMatches(resource.url, query)) {
+                return true;
+            }
+
+            for (var i = 0; i < resource.exchanges.length; i++) {
+                if (exchangeMatches(resource.exchanges[i], query)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function textMatches(text, query)
+        {
+            if (text === undefined) {
+                return false;
+            }
+
+            var words = query.split(' ');
+
+            for (var i = 0; i < words.length; i++) {
+                if (text.indexOf(words[i]) == -1) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function urlMatches(url, query)
+        {
+            if (url === undefined) {
+                return false;
+            }
+
+            var urlParts   = url.replace(/\/\/*/gm, '/').replace(/^\/+|\/+$/gm,'').split('/');
+            var queryParts = query.replace(/\/\/*/gm, '/').replace(/^\/+|\/+$/gm,'').replace(/ /gm, '').split('/');
+
+            for (var i = 0; i < queryParts.length; i++) {
+
+                if (urlParts[i] === undefined) {
+                    return false;
+                }
+
+                if (urlParts[i].substring(0, 1) == '{') {
+                    continue;
+                }
+
+                if (urlParts[i].substring(0, queryParts[i].length) != queryParts[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function exchangeMatches(exchange, query)
+        {
+            if ( textMatches(exchange.title, query) || textMatches(exchange.description, query) ) {
+                return true;
+            }
+
+            return false;
+        }
+
+
 
         mainController.$inject = ["$scope"];
-        function mainController($scope) {
+        function mainController($scope)
+        {
 
             var vm       = this;
             vm.modules   = <?= json_encode($data) ?>;
@@ -700,7 +469,7 @@
         function pushResource(resourceCollection, resource, parent)
         {
             if (resource.url !== undefined) {
-                
+
                 resource.url = '/'+resource.url
                     .replace(/\/\/*/gm, '/')    // remove double slashes
                     .replace(/^\/+|\/+$/gm,''); // remove trailing slashes
@@ -708,6 +477,10 @@
                 if (parent !== undefined && parent.url !== undefined) {
                     resource.url = parent.url + resource.url;
                 }
+            }
+
+            if (parent !== undefined && parent.attributes !== undefined) {
+                resource.attributes = angular.merge(resource.attributes || {}, parent.attributes);
             }
 
             var copy = {};
@@ -730,79 +503,89 @@
     </head>
 
     <body ng-controller="mainController as vm">
-        <main>
 
+        <main>
             <h1>Documentación</h1>
 
             <script type="text/ng-template" id="resource.html">
-                <details class="resource">
-                    <summary>
-                        <p ng-bind="resource.url"></p>
-                        <h2 ng-bind="resource.title"></h2>
-                    </summary>
+                <div class="resource">
+                    <details class="drawer" ng-open="isOpen">
+                        <summary>
+                            <p ng-bind="resource.url"></p>
+                            <h2 ng-bind="resource.title"></h2>
+                        </summary>
 
-                    <div>
-                        <table class="attributes" ng-if="resource.attributes">
-                            <tbody>
-                                <tr ng-repeat="(attributeName, attributeData) in resource.attributes">
-                                    <td ng-bind="attributeName"></td>
-                                    <td ng-bind="attributeData.$type + ' ' + attributeData.$pattern"></td>
-                                    <td>
-                                        <p ng-bind="attributeData.$title"></p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div>
 
-                        <div class="exchanges" ng-if="resource.exchanges">
+                            <div class="exchanges" ng-if="resource.exchanges">
 
-                            <details class="exchange {{exchange.request.method}}" ng-repeat="exchange in resource.exchanges">
+                                <details class="exchange {{exchange.request.method}}" ng-repeat="exchange in resource.exchanges">
 
-                                <summary>
-                                    <strong ng-bind="exchange.request.method || '!'"></strong>
-                                    <span ng-bind="exchange.title || resource.url"></span>
-                                </summary>
+                                    <summary>
+                                        <strong ng-bind="exchange.request.method || '!'"></strong>
+                                        <span ng-bind="exchange.title || resource.url"></span>
+                                    </summary>
 
-                                <div class="request">
+                                    <div class="request">
 
-                                    <p class="url" ng-show="exchange.request.method">
-                                        <em ng-bind="exchange.request.method"></em>
-                                        <span ng-bind="resource.url"></span>                                    
-                                    </p>
+                                        <details class="url" ng-show="exchange.request.method">
+                                            <summary>
+                                                <span class="method" ng-bind="exchange.request.method"></span>
+                                                <span class="url" ng-bind="resource.url"></span>
+                                                <ul class="querystring" ng-if="exchange.request.parameters">
+                                                    <li ng-repeat="(parameterName, parameterData) in exchange.request.parameters">{{parameterName}}=...</li>
+                                                </ul>
+                                            </summary>
 
-                                    <p class="header" ng-repeat="(property, value) in exchange.request.headers">
-                                        <em ng-bind="property"></em>:
-                                        <span ng-bind="value"></span>
-                                    </p>
+                                            <table class="attributes" ng-if="resource.attributes">
+                                                <tbody>
+                                                    <tr ng-repeat="(attributeName, attributeData) in resource.attributes">
+                                                        <td ng-bind="attributeName"></td>
+                                                        <td phidias-json-schema="attributeData"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
 
-                                    <div class="body" ng-if="exchange.request.body">
-                                        {{exchange.request.body}}
+                                            <table class="parameters" ng-if="exchange.request.parameters">
+                                                <tbody>
+                                                    <tr ng-repeat="(parameterName, parameterData) in exchange.request.parameters">
+                                                        <td ng-bind="parameterName"></td>
+                                                        <td phidias-json-schema="parameterData"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </details>
+
+                                        <p class="header" ng-repeat="(property, value) in exchange.request.headers">
+                                            <em ng-bind="property"></em>:
+                                            <span phidias-json-schema="value"></span>
+                                        </p>
+
+                                        <div class="body" ng-if="exchange.request.body" phidias-json-schema="exchange.request.body"></div>
                                     </div>
-                                </div>
 
-                                <div class="response">
-                                    <p class="code" ng-bind="(exchange.response.code || '200') + ' ' + (exchange.response.reason || 'OK')"></p>
+                                    <div class="response">
+                                        <p class="code" ng-bind="(exchange.response.code || '200') + ' ' + (exchange.response.reason || 'OK')"></p>
 
-                                    <p class="header" ng-repeat="(property, value) in exchange.response.headers">
-                                        <em ng-bind="property"></em>:
-                                        <span ng-bind="value"></span>
-                                    </p>
+                                        <p class="header" ng-repeat="(property, value) in exchange.response.headers">
+                                            <em ng-bind="property"></em>:
+                                            <span phidias-json-schema="value"></span>
+                                        </p>
 
-                                    <div class="body" ng-if="exchange.response.body">
-                                        {{exchange.response.body}}
+                                        <div class="body" ng-if="exchange.response.body" phidias-json-schema="exchange.response.body"></div>
                                     </div>
-                                </div>
 
-                            </details>
+                                </details>
 
+                            </div>
                         </div>
+                    </details>
 
-                        <div class="resources" ng-if="resource.resources" ng-init="baseUrl = resource.url">
-                            <div ng-include="'resource.html'" ng-repeat="resource in resource.resources"></div>
-                        </div>
-
+                    <div class="resources" ng-if="resource.resources" ng-init="baseUrl = resource.url">
+                        <div ng-include="'resource.html'" ng-repeat="resource in resource.resources"></div>
                     </div>
-                </details>
+
+                </div>
             </script>
 
 
@@ -810,25 +593,24 @@
                 <input type="text" placeholder="Buscar ..." ng-model="search" />
 
                 <div class="results" ng-if="!!search.length">
-                    <div ng-repeat="resource in vm.allResources|filter:search">
-                        <div ng-include="'resource.html'"></div>
+                    <div ng-repeat="resource in vm.allResources|findResource:search">
+                        <div ng-include="'resource.html'" onload="isOpen = true"></div>
                     </div>
                 </div>
             </div>
 
             <div ng-repeat="module in vm.modules" ng-show="!search">
 
-                <details class="resource module">
+                <details class="module drawer">
                     <summary>
                         <h2 ng-bind="module.title"></h2>
                         <p ng-bind="module.description"></p>
                     </summary>
 
-                    <div>
-                        <div class="resources" ng-if="module.resources">
-                            <div ng-include="'resource.html'" ng-repeat="resource in module.resources"></div>
-                        </div>
+                    <div class="resources" ng-if="module.resources">
+                        <div ng-include="'resource.html'" ng-repeat="resource in module.resources"></div>
                     </div>
+
                 </details>
 
             </div>
