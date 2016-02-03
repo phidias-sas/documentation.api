@@ -16,6 +16,11 @@
         <style type="text/css">
         html {
             font-family: 'Droid Sans', sans-serif;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
 
         html, body {
@@ -23,11 +28,34 @@
             padding: 0;
         }
 
+        h1, h2, h3, h4 {
+            font-weight: normal;
+        }
+
         main {
             display: block;
             margin: 32px 0 0 32px;
             padding: 0;
             max-width: 1024px;
+        }
+
+        #search {
+        }
+
+        #search input {
+            border: 0;
+            width: 100%;
+            font-size: 1.3em;
+            line-height: 1.3em;
+
+            border-bottom: 1px solid #999;
+            margin-bottom: 16px;
+
+            outline: none;
+        }
+
+        #search input:focus {
+            border-bottom: 2px solid #666;
         }
 
         summary {
@@ -54,12 +82,29 @@
             margin-bottom: 48px;
         }
 
-        .resource > summary {
-            margin: 0 0 8px 0;
+        .resource[open] > summary {
+            background-color: rgba(0,0,0, 0.08);
         }
+
+        .resource summary h2,
+        .resource summary p {
+            margin: 0;
+            padding: 0;
+
+            font-weight: normal;
+        }
+
+        .resource summary p {
+            color: #655;
+        }
+
 
         .resource table.attributes {
             width: 100%;
+
+            background-color: rgba(0,0,0, 0.08);
+            padding: 8px; /* match with <summary> padding */
+            margin: 0;
         }
 
         .resource table.attributes td {
@@ -76,27 +121,25 @@
             color: #333;
         }
 
-        .resource summary h2,
-        .resource summary p {
+        .resource .exchanges {
             margin: 0;
-            padding: 0;
         }
 
-        .resource summary h2 {
-            font-weight: normal;
+        .exchange summary {
+            padding: 12px;
         }
 
-        .resource summary p {
-            font-weight: bold;
+        .exchange[open] summary {
+            background-color: rgba(0,0,0, 0.08);
         }
-
 
         .exchange summary strong {
 
             display: inline-block;
+            text-align: center;
             padding: 4px;
             width: 60px;
-            text-align: center;
+            margin-right: 1em;
 
             background-color: #4dbcd4;
             color: #fff;
@@ -119,31 +162,37 @@
             background-color: #f34541;
         }
 
-
-        .resource table.headers {
-            width: 100%;
-        }
-
-        .resource table.headers td {
-            vertical-align: top;
-        }
-
-        .resource table.headers td:first-child {
-            font-weight: bold;
-            width: 120px;
-        }
-
-        .resource .body {
+        .exchange .request,
+        .exchange .response {
+            padding: 18px 32px;
             font-family: Courier, sans-serif;
-            background-color: #f3f3f3;
-            padding: 11px;
-            font-size: 12px;
         }
 
-        .response .code {
+        .exchange p {
             margin: 0;
-            padding: 0;
-            font-weight: normal;
+        }
+
+        .exchange p em {
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        .exchange .body {
+            margin-top: 1em;
+        }
+
+        .exchange .request {
+            background-color: rgba(0,0,0, 0.08);
+        }
+
+        .exchange .response {
+            padding-bottom: 32px;
+            background: #5a615e;
+            color: #ddd;
+        }
+
+        .resource .resources {
+            margin: 24px 0 0 24px;
         }
 
         </style>
@@ -637,17 +686,12 @@
 
             var vm       = this;
             vm.modules   = <?= json_encode($data) ?>;
-            vm.resources = new Collection();
+
+            vm.allResources = [];
 
             for (var i = 0; i < vm.modules.length; i++) {
-                pushResource(vm.resources, vm.modules[i]);
+                pushResource(vm.allResources, vm.modules[i]);
             }
-
-            vm.getExample = function(object) {
-                var S = new Schema;
-                return S.getExample(object);
-            };
-
         }
 
         function pushResource(resourceCollection, resource, parent)
@@ -656,9 +700,14 @@
                 resource.url = parent.url + "/" + resource.url;
             }
 
-            resource.exchanges = new Collection(resource.exchanges);
+            var copy = {};
+            for (var property in resource) {
+                if (property != 'resources') {
+                    copy[property] = resource[property];
+                }
+            }
 
-            resourceCollection.push(resource);
+            resourceCollection.push(copy);
 
             if (resource.hasOwnProperty('resources')) {
                 for (var i = 0; i < resource.resources.length; i++) {
@@ -672,72 +721,107 @@
 
     <body ng-controller="mainController as vm">
         <main>
-            <h1>Documentation</h1>
 
-            <details class="resource" ng-repeat="resource in vm.resources.items">
+            <h1>Documentación</h1>
 
-                <summary>
-                    <h2 ng-bind="resource.title"></h2>
-                    <p ng-bind="resource.url"></p>
-                </summary>
+            <script type="text/ng-template" id="resource.html">
+                <details class="resource">
+                    <summary>
+                        <h2 ng-bind="resource.title"></h2>
+                        <p ng-bind="resource.url"></p>
+                    </summary>
 
-                <table class="attributes" ng-if="resource.attributes">
-                    <tbody>
-                        <tr ng-repeat="(attributeName, attributeData) in resource.attributes">
-                            <td ng-bind="attributeName"></td>
-                            <td ng-bind="attributeData.$type"></td>
-                            <td>
-                                <p ng-bind="attributeData.$title"></p>
-                                <p ng-bind="attributeData.$pattern"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-
-                <div class="exchanges">
-
-                    <details class="exchange {{exchange.request.method}}" ng-repeat="exchange in resource.exchanges.items">
-
-                        <summary>
-                            <strong ng-bind="exchange.request.method"></strong>
-                            <span ng-bind="exchange.title || resource.url"></span>
-                        </summary>
-
-                        <div class="request">
-                            <table class="headers">
-                                <tr ng-repeat="(property, value) in exchange.request.headers">
-                                    <td ng-bind="property"></td>
-                                    <td>{{value}}</td>
+                    <div>
+                        <table class="attributes" ng-if="resource.attributes">
+                            <tbody>
+                                <tr ng-repeat="(attributeName, attributeData) in resource.attributes">
+                                    <td ng-bind="attributeName"></td>
+                                    <td ng-bind="attributeData.$type + ' ' + attributeData.$pattern"></td>
+                                    <td>
+                                        <p ng-bind="attributeData.$title"></p>
+                                    </td>
                                 </tr>
-                            </table>
+                            </tbody>
+                        </table>
 
-                            <div class="body" ng-if="exchange.request.body">
-                                <div class="schema">{{exchange.request.body}}</div>
-                                <!-- <div class="example">{{ vm.getExample(exchange.request.body) }}</div> -->                                
-                            </div>
+                        <div class="exchanges" ng-if="resource.exchanges">
+
+                            <details class="exchange {{exchange.request.method}}" ng-repeat="exchange in resource.exchanges">
+
+                                <summary>
+                                    <strong ng-bind="exchange.request.method"></strong>
+                                    <span ng-bind="exchange.title || resource.url"></span>
+                                </summary>
+
+                                <div class="request">
+                                    <p class="url">
+                                        <em ng-bind="exchange.request.method"></em>
+                                        <span ng-bind="resource.url"></span>                                    
+                                    </p>
+
+                                    <p class="header" ng-repeat="(property, value) in exchange.request.headers">
+                                        <em ng-bind="property"></em>:
+                                        <span ng-bind="value"></span>
+                                    </p>
+
+                                    <div class="body" ng-if="exchange.request.body">
+                                        {{exchange.request.body}}
+                                    </div>
+                                </div>
+
+                                <div class="response">
+                                    <p class="code" ng-bind="(exchange.response.code || '200') + ' ' + (exchange.response.reason || 'OK')"></p>
+
+                                    <p class="header" ng-repeat="(property, value) in exchange.response.headers">
+                                        <em ng-bind="property"></em>:
+                                        <span ng-bind="value"></span>
+                                    </p>
+
+                                    <div class="body" ng-if="exchange.response.body">
+                                        {{exchange.response.body}}
+                                    </div>
+                                </div>
+
+                            </details>
+
                         </div>
 
-                        <div class="response">
-                            <h3 class="code" ng-bind="exchange.response.code"></h3>
-                            <table class="headers">
-                                <tr ng-repeat="(property, value) in exchange.response.headers">
-                                    <td ng-bind="property"></td>
-                                    <td>{{value}}</td>
-                                </tr>
-                            </table>
-
-                            <div class="body" ng-if="exchange.response.body">
-                                <div class="schema">{{exchange.response.body}}</div>
-                                <!-- <div class="example">{{ vm.getExample(exchange.response.body) }}</div> -->
-                            </div>
+                        <div class="resources" ng-if="resource.resources" ng-init="baseUrl = resource.url">
+                            <div ng-include="'resource.html'" ng-repeat="resource in resource.resources"></div>
                         </div>
 
-                    </details>
+                    </div>
+                </details>
+            </script>
 
+
+            <div id="search">
+                <input type="text" placeholder="Buscar ..." ng-model="search" />
+
+                <div class="results" ng-if="!!search.length">
+                    <div ng-repeat="resource in vm.allResources|filter:search">
+                        <div ng-include="'resource.html'"></div>
+                    </div>
                 </div>
 
-            </details>
+            </div>
+
+            <div ng-repeat="module in vm.modules">
+
+                <details class="resource module">
+                    <summary>
+                        <h2 ng-bind="module.title"></h2>
+                        <p ng-bind="module.description"></p>
+                    </summary>
+
+                    <div>
+                        <div class="resources" ng-if="module.resources">
+                            <div ng-include="'resource.html'" ng-repeat="resource in module.resources"></div>
+                        </div>
+                    </div>
+                </details>
+
+            </div>
 
         </main>
     </body>
