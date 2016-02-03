@@ -699,8 +699,15 @@
 
         function pushResource(resourceCollection, resource, parent)
         {
-            if (parent !== undefined && parent.url !== undefined) {
-                resource.url = parent.url + "/" + resource.url;
+            if (resource.url !== undefined) {
+                
+                resource.url = '/'+resource.url
+                    .replace(/\/\/*/gm, '/')    // remove double slashes
+                    .replace(/^\/+|\/+$/gm,''); // remove trailing slashes
+
+                if (parent !== undefined && parent.url !== undefined) {
+                    resource.url = parent.url + resource.url;
+                }
             }
 
             var copy = {};
@@ -730,8 +737,8 @@
             <script type="text/ng-template" id="resource.html">
                 <details class="resource">
                     <summary>
-                        <h2 ng-bind="resource.title"></h2>
                         <p ng-bind="resource.url"></p>
+                        <h2 ng-bind="resource.title"></h2>
                     </summary>
 
                     <div>
