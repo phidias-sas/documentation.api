@@ -342,18 +342,24 @@
                 case undefined:
 
                     var retval = {};
+                    var foundPropertiesCount = 0;
+
                     for (var property in schema) {
-                        retval[property] = getExplanation(schema[property]);
+                        if (schema.hasOwnProperty(property) && property.substring(0, 1) !== '$') {
+                            retval[property] = getExplanation(schema[property]);
+                            foundPropertiesCount++;
+                        }
                     }
-                    return retval;
+
+                    if (foundPropertiesCount > 0) {
+                        return retval;
+                    }
 
                 break;
 
-                default:
-                    return schema.$title ? schema.$title : schema.$type;
-                break;
             }
 
+            return schema.$title ? schema.$title : schema.$type;
         }
 
 
