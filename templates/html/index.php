@@ -60,8 +60,10 @@
 
         summary {
             display: block;
-            padding: 8px;
+            padding: 8px 16px;
             cursor: pointer;
+
+            outline: none;
         }
 
         summary:hover {
@@ -123,6 +125,7 @@
 
         .resource .exchanges {
             margin: 0;
+            background-color: rgba(0,0,0, 0.08);
         }
 
         .exchange summary {
@@ -141,7 +144,7 @@
             width: 60px;
             margin-right: 1em;
 
-            background-color: #4dbcd4;
+            background-color: #666;
             color: #fff;
             font-weight: normal;
         }
@@ -192,7 +195,7 @@
         }
 
         .resource .resources {
-            margin: 24px 0 0 24px;
+            margin: 8px 0 0 8px;
         }
 
         </style>
@@ -749,12 +752,13 @@
                             <details class="exchange {{exchange.request.method}}" ng-repeat="exchange in resource.exchanges">
 
                                 <summary>
-                                    <strong ng-bind="exchange.request.method"></strong>
+                                    <strong ng-bind="exchange.request.method || '!'"></strong>
                                     <span ng-bind="exchange.title || resource.url"></span>
                                 </summary>
 
                                 <div class="request">
-                                    <p class="url">
+
+                                    <p class="url" ng-show="exchange.request.method">
                                         <em ng-bind="exchange.request.method"></em>
                                         <span ng-bind="resource.url"></span>                                    
                                     </p>
@@ -803,10 +807,9 @@
                         <div ng-include="'resource.html'"></div>
                     </div>
                 </div>
-
             </div>
 
-            <div ng-repeat="module in vm.modules">
+            <div ng-repeat="module in vm.modules" ng-show="!search">
 
                 <details class="resource module">
                     <summary>
