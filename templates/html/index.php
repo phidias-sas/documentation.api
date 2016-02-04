@@ -33,14 +33,12 @@
             padding: 0;
         }
 
-
         main {
             display: block;
             margin: 32px 0 0 32px;
             padding: 0;
             max-width: 1024px;
         }
-
 
         [phidias-json-schema] {
             display: inline-block;
@@ -56,7 +54,7 @@
             font-size: 1.3em;
             line-height: 1.3em;
 
-            border-bottom: 1px solid #999;
+            border-bottom: 1px solid #ccc;
             margin-bottom: 16px;
 
             outline: none;
