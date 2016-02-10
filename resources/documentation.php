@@ -1,4 +1,4 @@
-<?php 
+<?php
 $templateFolder = realpath(__DIR__."/../templates");
 
 return [
@@ -6,10 +6,10 @@ return [
     "/documentation" => [
         "get" => [
             "controller" => "Phidias\Documentation\Controller->main()",
-            "template" => [
+            "interpreter" => [
                "text/html" => "$templateFolder/html/index.php"
             ]
         ]
-    ]  
+    ]
 
 ];

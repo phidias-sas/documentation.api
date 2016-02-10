@@ -461,7 +461,7 @@
         {
 
             var vm       = this;
-            vm.modules   = <?= json_encode($data) ?>;
+            vm.modules   = <?= json_encode($output) ?>;
 
             vm.allResources = [];
 
